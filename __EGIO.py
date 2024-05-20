@@ -83,6 +83,8 @@ def scorealignment(seqa,seqb):
     ## mismatch: -10
     ## gap: -8
     ## continuous gap[i]: gap[i-1]*0.8
+    alpha = 0.8
+
     if isinstance(seqa,str):
         seqa = list(seqa)
     if isinstance(seqb,str):
@@ -92,25 +94,22 @@ def scorealignment(seqa,seqb):
     if seqa[0] == seqb[0]:
         score = 10
     else:
-        if seqa[0] == "-" or seqb[0] == "-":
-            score = -8
-        else:
-            score = -10
+        score = -10
     for i in range(1,len(seqa)):
         if seqa[i] == seqb[i]:
             score = score + 10
         else:
             if seqa[i] != "-" and seqb[i] != "-":
-                score = score - 10
+                score = score - 10    
             elif seqa[i] == "-" and seqb[i] != "-":
                 if seqa[i-1] == "-":
-                    gapscore = gapscore*0.8
+                    gapscore = gapscore*alpha
                 else:
                     gapscore = -8
                 score = score + gapscore
             elif seqa[i] != "-" and seqb[i] == "-":
                 if seqb[i-1] == "-":
-                    gapscore = gapscore*0.8
+                    gapscore = gapscore*alpha
                 else:
                     gapscore = -8
                 score = score + gapscore
