@@ -289,8 +289,10 @@ def prepare_geio_extra(gtf, cdna, cds, species):
                     orf = "|".join([str(orfDt[tid][0]),str(orfDt[tid][1])])
                 else:
                     orf = ".|."
-
-                typ = typtmp[0].split(" ")[1].replace("\"","").replace("\n","")
+                if not(typtmp):
+                    typ = "."
+                else:
+                    typ = typtmp[0].split(" ")[1].replace("\"","").replace("\n","")
                 
                 strandname = strand
                 chromosome = chrom
