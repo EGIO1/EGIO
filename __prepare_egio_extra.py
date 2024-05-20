@@ -248,7 +248,11 @@ def prepare_geio_extra(gtf, cdna, cds, species):
                 genestrls.append(strand)
                 genechrls.append(chrom)
                 ############################
-                gty = gtytmp[0].split(" ")[1].replace("\"","").replace("\n","").replace(";","")
+                if not(gtytmp):
+                    gty = "."
+                else:
+                    gty = gtytmp[0].split(" ")[1].replace("\"","").replace("\n","").replace(";","")
+                
                 if not(gnmtmp):
                     gnm = "."
                 else:
