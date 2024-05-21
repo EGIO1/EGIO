@@ -170,16 +170,23 @@ def prepare_geio_extra(gtf, cdna, cds, species):
     print(str(len(cdsDt))+' CDS sequence is read')
     ##===============================================
     
+    tran_name_cds_st = []
     orfpos = []
     for i in range(0,len(tran_name_cds)):
         orfforstart = cdnaDt[tran_name_cds[i]].find(cdsDt[tran_name_cds[i]][0:(len(cdsDt[tran_name_cds[i]])//3)])
         orfrevstart = cdsDt[tran_name_cds[i]].find(cdnaDt[tran_name_cds[i]][0:(len(cdsDt[tran_name_cds[i]])//3)])
-        orfstart = orfforstart+1 if orfforstart >= 0 else orfrevstart*-1
-        orfend = orfstart + len(cdsDt[tran_name_cds[i]])-1 if orfforstart >= 0 else orfrevstart*-1+len(cdsDt[tran_name_cds[i]])
-        orfpos.append([orfstart,orfend])
+        
+        if orfforstart < 0 and orfrevstart < 0:
+            print("warning: mRNA and CDS sequence of " + tran_name_cds[i] + " do not match")
+            continue
+        else:
+            orfstart = orfforstart+1 if orfforstart >= 0 else orfrevstart*-1
+            orfend = orfstart + len(cdsDt[tran_name_cds[i]])-1 if orfforstart >= 0 else orfrevstart*-1+len(cdsDt[tran_name_cds[i]])
+            tran_name_cds_st.append(tran_name_cds[i])
+            orfpos.append([orfstart,orfend])
 
     orfDt = {}
-    for k, v in zip(tran_name_cds,orfpos):
+    for k, v in zip(tran_name_cds_st,orfpos):
         orfDt[k] = v    
     
     ##===============================================
@@ -242,7 +249,7 @@ def prepare_geio_extra(gtf, cdna, cds, species):
                 gnmtmp = [x for x in attr if "gene_name" in x]
                 gtytmp = [x for x in attr if "gene_biotype" in x]
                 
-                gid = gidtmp[0].split(" ")[1].replace("\"","").replace("\n","")
+                gid = gidtmp[0].split(" ")[1].replace(";","").replace("\"","").replace("\n","")
                 ############################
                 unigen.append(gid)
                 genestrls.append(strand)
@@ -256,7 +263,7 @@ def prepare_geio_extra(gtf, cdna, cds, species):
                 if not(gnmtmp):
                     gnm = "."
                 else:
-                    gnm = gnmtmp[0].split(" ")[1].replace("\"","").replace("\n","")
+                    gnm = gnmtmp[0].split(" ")[1].replace(";","").replace("\"","").replace("\n","")
                 
             if feature == "transcript":
                 
@@ -282,7 +289,7 @@ def prepare_geio_extra(gtf, cdna, cds, species):
                 typtmp = [x for x in attr if "transcript_biotype" in x]
                 
                 
-                tid = tidtmp[0].split(" ")[1].replace("\"","").replace("\n","")
+                tid = tidtmp[0].split(" ")[1].replace(";","").replace("\"","").replace("\n","")
                 isolstmp.append(tid)
 
                 if tid in orfDt:
@@ -292,7 +299,7 @@ def prepare_geio_extra(gtf, cdna, cds, species):
                 if not(typtmp):
                     typ = "."
                 else:
-                    typ = typtmp[0].split(" ")[1].replace("\"","").replace("\n","")
+                    typ = typtmp[0].split(" ")[1].replace(";","").replace("\"","").replace("\n","")
                 
                 strandname = strand
                 chromosome = chrom
@@ -446,3 +453,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     prepare_geio_extra(args.gtf, args.cdna, args.cds, args.species)
+
