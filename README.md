@@ -1,8 +1,9 @@
 ## Update notes
 ### May 20th, 2024
 
-Fix bugs to meet the gtf format generate by StringTie
-Improve alignment scoring system
+(1) Fix bugs to meet the gtf format generate by StringTie;
+
+(2) Improve alignment scoring system
 
 ### December 18th, 2022
 
